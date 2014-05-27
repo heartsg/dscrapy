@@ -5,11 +5,11 @@ from collections import deque
 
 from twisted.internet import reactor, defer, task
 
-from scrapy.utils.defer import mustbe_deferred
-from scrapy.utils.httpobj import urlparse_cached
-from scrapy.resolver import dnscache
-from scrapy.exceptions import ScrapyDeprecationWarning
-from scrapy import signals
+from dscrapy.utils.defer import mustbe_deferred
+from dscrapy.utils.httpobj import urlparse_cached
+from dscrapy.resolver import dnscache
+from dscrapy.exceptions import ScrapyDeprecationWarning
+from dscrapy import signals
 from .middleware import DownloaderMiddlewareManager
 from .handlers import DownloadHandlers
 
