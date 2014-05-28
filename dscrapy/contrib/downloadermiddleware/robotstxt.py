@@ -6,10 +6,10 @@ enable this middleware and enable the ROBOTSTXT_OBEY setting.
 
 import robotparser
 
-from scrapy import signals, log
-from scrapy.exceptions import NotConfigured, IgnoreRequest
-from scrapy.http import Request
-from scrapy.utils.httpobj import urlparse_cached
+from dscrapy import signals, log
+from dscrapy.exceptions import NotConfigured, IgnoreRequest
+from dscrapy.http import Request
+from dscrapy.utils.httpobj import urlparse_cached
 
 
 class RobotsTxtMiddleware(object):

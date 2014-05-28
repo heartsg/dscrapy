@@ -6,7 +6,7 @@ See documentation in docs/topics/downloader-middleware.rst
 
 from w3lib.http import basic_auth_header
 
-from scrapy import signals
+from dscrapy import signals
 
 
 class HttpAuthMiddleware(object):

@@ -1,6 +1,6 @@
 """Set User-Agent header per spider or use a default value from settings"""
 
-from scrapy import signals
+from dscrapy import signals
 
 
 class UserAgentMiddleware(object):

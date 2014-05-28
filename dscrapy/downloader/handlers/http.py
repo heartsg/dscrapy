@@ -1,4 +1,4 @@
-from scrapy import optional_features
+from dscrapy import optional_features
 from .http10 import HTTP10DownloadHandler
 
 if 'http11' in optional_features:

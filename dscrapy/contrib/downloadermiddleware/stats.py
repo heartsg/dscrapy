@@ -1,6 +1,6 @@
-from scrapy.exceptions import NotConfigured
-from scrapy.utils.request import request_httprepr
-from scrapy.utils.response import response_httprepr
+from dscrapy.exceptions import NotConfigured
+from dscrapy.utils.request import request_httprepr
+from dscrapy.utils.response import response_httprepr
 
 class DownloaderStats(object):
 

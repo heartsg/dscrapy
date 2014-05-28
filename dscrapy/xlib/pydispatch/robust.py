@@ -1,6 +1,6 @@
 """Module implementing error-catching version of send (sendRobust)"""
-from scrapy.xlib.pydispatch.dispatcher import Any, Anonymous, liveReceivers, getAllReceivers
-from scrapy.xlib.pydispatch.robustapply import robustApply
+from dscrapy.xlib.pydispatch.dispatcher import Any, Anonymous, liveReceivers, getAllReceivers
+from dscrapy.xlib.pydispatch.robustapply import robustApply
 
 def sendRobust(
 	signal=Any, 

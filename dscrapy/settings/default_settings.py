@@ -40,7 +40,7 @@ CONCURRENT_REQUESTS_PER_IP = 0
 COOKIES_ENABLED = True
 COOKIES_DEBUG = False
 
-DEFAULT_ITEM_CLASS = 'scrapy.item.Item'
+DEFAULT_ITEM_CLASS = 'dscrapy.item.Item'
 
 DEFAULT_REQUEST_HEADERS = {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -57,37 +57,37 @@ DOWNLOAD_DELAY = 0
 
 DOWNLOAD_HANDLERS = {}
 DOWNLOAD_HANDLERS_BASE = {
-    'file': 'scrapy.core.downloader.handlers.file.FileDownloadHandler',
-    'http': 'scrapy.core.downloader.handlers.http.HTTPDownloadHandler',
-    'https': 'scrapy.core.downloader.handlers.http.HTTPDownloadHandler',
-    's3': 'scrapy.core.downloader.handlers.s3.S3DownloadHandler',
-    'ftp': 'scrapy.core.downloader.handlers.ftp.FTPDownloadHandler',
+    'file': 'dscrapy.downloader.handlers.file.FileDownloadHandler',
+    'http': 'dscrapy.downloader.handlers.http.HTTPDownloadHandler',
+    'https': 'dscrapy.downloader.handlers.http.HTTPDownloadHandler',
+    's3': 'dscrapy.downloader.handlers.s3.S3DownloadHandler',
+    'ftp': 'dscrapy.downloader.handlers.ftp.FTPDownloadHandler',
 }
 
 DOWNLOAD_TIMEOUT = 180      # 3mins
 
-DOWNLOADER_HTTPCLIENTFACTORY = 'scrapy.core.downloader.webclient.ScrapyHTTPClientFactory'
-DOWNLOADER_CLIENTCONTEXTFACTORY = 'scrapy.core.downloader.contextfactory.ScrapyClientContextFactory'
+DOWNLOADER_HTTPCLIENTFACTORY = 'dscrapy.downloader.webclient.DScrapyHTTPClientFactory'
+DOWNLOADER_CLIENTCONTEXTFACTORY = 'dscrapy.downloader.contextfactory.DScrapyClientContextFactory'
 
 DOWNLOADER_MIDDLEWARES = {}
 
 DOWNLOADER_MIDDLEWARES_BASE = {
     # Engine side
-    'scrapy.contrib.downloadermiddleware.robotstxt.RobotsTxtMiddleware': 100,
-    'scrapy.contrib.downloadermiddleware.httpauth.HttpAuthMiddleware': 300,
-    'scrapy.contrib.downloadermiddleware.downloadtimeout.DownloadTimeoutMiddleware': 350,
-    'scrapy.contrib.downloadermiddleware.useragent.UserAgentMiddleware': 400,
-    'scrapy.contrib.downloadermiddleware.retry.RetryMiddleware': 500,
-    'scrapy.contrib.downloadermiddleware.defaultheaders.DefaultHeadersMiddleware': 550,
-    'scrapy.contrib.downloadermiddleware.ajaxcrawl.AjaxCrawlMiddleware': 560,
-    'scrapy.contrib.downloadermiddleware.redirect.MetaRefreshMiddleware': 580,
-    'scrapy.contrib.downloadermiddleware.httpcompression.HttpCompressionMiddleware': 590,
-    'scrapy.contrib.downloadermiddleware.redirect.RedirectMiddleware': 600,
-    'scrapy.contrib.downloadermiddleware.cookies.CookiesMiddleware': 700,
-    'scrapy.contrib.downloadermiddleware.httpproxy.HttpProxyMiddleware': 750,
-    'scrapy.contrib.downloadermiddleware.chunked.ChunkedTransferMiddleware': 830,
-    'scrapy.contrib.downloadermiddleware.stats.DownloaderStats': 850,
-    'scrapy.contrib.downloadermiddleware.httpcache.HttpCacheMiddleware': 900,
+    'dscrapy.contrib.downloadermiddleware.robotstxt.RobotsTxtMiddleware': 100,
+    'dscrapy.contrib.downloadermiddleware.httpauth.HttpAuthMiddleware': 300,
+    'dscrapy.contrib.downloadermiddleware.downloadtimeout.DownloadTimeoutMiddleware': 350,
+    'dscrapy.contrib.downloadermiddleware.useragent.UserAgentMiddleware': 400,
+    'dscrapy.contrib.downloadermiddleware.retry.RetryMiddleware': 500,
+    'dscrapy.contrib.downloadermiddleware.defaultheaders.DefaultHeadersMiddleware': 550,
+    'dscrapy.contrib.downloadermiddleware.ajaxcrawl.AjaxCrawlMiddleware': 560,
+    'dscrapy.contrib.downloadermiddleware.redirect.MetaRefreshMiddleware': 580,
+    'dscrapy.contrib.downloadermiddleware.httpcompression.HttpCompressionMiddleware': 590,
+    'dscrapy.contrib.downloadermiddleware.redirect.RedirectMiddleware': 600,
+    'dscrapy.contrib.downloadermiddleware.cookies.CookiesMiddleware': 700,
+    'dscrapy.contrib.downloadermiddleware.httpproxy.HttpProxyMiddleware': 750,
+    'dscrapy.contrib.downloadermiddleware.chunked.ChunkedTransferMiddleware': 830,
+    'dscrapy.contrib.downloadermiddleware.stats.DownloaderStats': 850,
+    'dscrapy.contrib.downloadermiddleware.httpcache.HttpCacheMiddleware': 900,
     # Downloader side
 }
 

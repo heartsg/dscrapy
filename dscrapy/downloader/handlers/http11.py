@@ -12,13 +12,13 @@ from twisted.web.http_headers import Headers as TxHeaders
 from twisted.web.iweb import IBodyProducer
 from twisted.internet.error import TimeoutError
 from twisted.web.http import PotentialDataLoss
-from scrapy.xlib.tx import Agent, ProxyAgent, ResponseDone, \
+from dscrapy.xlib.tx import Agent, ProxyAgent, ResponseDone, \
     HTTPConnectionPool, TCP4ClientEndpoint
 
-from scrapy.http import Headers
-from scrapy.responsetypes import responsetypes
-from scrapy.core.downloader.webclient import _parse
-from scrapy.utils.misc import load_object
+from dscrapy.http import Headers
+from dscrapy.responsetypes import responsetypes
+from dscrapy.downloader.webclient import _parse
+from dscrapy.utils.misc import load_object
 
 
 class HTTP11DownloadHandler(object):

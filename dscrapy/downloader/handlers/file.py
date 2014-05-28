@@ -1,6 +1,6 @@
 from w3lib.url import file_uri_to_path
-from scrapy.responsetypes import responsetypes
-from scrapy.utils.decorator import defers
+from dscrapy.responsetypes import responsetypes
+from dscrapy.utils.decorator import defers
 
 class FileDownloadHandler(object):
 

@@ -1,6 +1,6 @@
-from scrapy import optional_features
-from scrapy.exceptions import NotConfigured
-from scrapy.utils.httpobj import urlparse_cached
+from dscrapy import optional_features
+from dscrapy.exceptions import NotConfigured
+from dscrapy.utils.httpobj import urlparse_cached
 from .http import HTTPDownloadHandler
 
 try:

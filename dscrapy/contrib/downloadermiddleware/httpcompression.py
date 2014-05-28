@@ -1,9 +1,9 @@
 import zlib
 
-from scrapy.utils.gz import gunzip, is_gzipped
-from scrapy.http import Response, TextResponse
-from scrapy.responsetypes import responsetypes
-from scrapy.exceptions import NotConfigured
+from dscrapy.utils.gz import gunzip, is_gzipped
+from dscrapy.http import Response, TextResponse
+from dscrapy.responsetypes import responsetypes
+from dscrapy.exceptions import NotConfigured
 
 
 class HttpCompressionMiddleware(object):

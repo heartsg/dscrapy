@@ -4,7 +4,7 @@ Download timeout middleware
 See documentation in docs/topics/downloader-middleware.rst
 """
 
-from scrapy import signals
+from dscrapy import signals
 
 
 class DownloadTimeoutMiddleware(object):

@@ -1,7 +1,7 @@
 from email.utils import formatdate
-from scrapy import signals
-from scrapy.exceptions import NotConfigured, IgnoreRequest
-from scrapy.utils.misc import load_object
+from dscrapy import signals
+from dscrapy.exceptions import NotConfigured, IgnoreRequest
+from dscrapy.utils.misc import load_object
 
 
 class HttpCacheMiddleware(object):

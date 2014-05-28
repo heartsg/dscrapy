@@ -1,4 +1,4 @@
-from scrapy.utils.http import decode_chunked_transfer
+from dscrapy.utils.http import decode_chunked_transfer
 
 
 class ChunkedTransferMiddleware(object):

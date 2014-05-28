@@ -1,10 +1,10 @@
 import os
 from collections import defaultdict
 
-from scrapy.exceptions import NotConfigured
-from scrapy.http import Response
-from scrapy.http.cookies import CookieJar
-from scrapy import log
+from dscrapy.exceptions import NotConfigured
+from dscrapy.http import Response
+from dscrapy.http.cookies import CookieJar
+from dscrapy import log
 
 
 class CookiesMiddleware(object):

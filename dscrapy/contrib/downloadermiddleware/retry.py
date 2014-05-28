@@ -23,10 +23,10 @@ from twisted.internet.error import TimeoutError as ServerTimeoutError, \
         DNSLookupError, ConnectionRefusedError, ConnectionDone, ConnectError, \
         ConnectionLost, TCPTimedOutError
 
-from scrapy import log
-from scrapy.exceptions import NotConfigured
-from scrapy.utils.response import response_status_message
-from scrapy.xlib.tx import ResponseFailed
+from dscrapy import log
+from dscrapy.exceptions import NotConfigured
+from dscrapy.utils.response import response_status_message
+from dscrapy.xlib.tx import ResponseFailed
 
 
 class RetryMiddleware(object):

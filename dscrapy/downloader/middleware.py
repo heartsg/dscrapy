@@ -4,10 +4,10 @@ Downloader Middleware manager
 See documentation in docs/topics/downloader-middleware.rst
 """
 
-from scrapy.http import Request, Response
-from scrapy.middleware import MiddlewareManager
-from scrapy.utils.defer import mustbe_deferred
-from scrapy.utils.conf import build_component_list
+from dscrapy.http import Request, Response
+from dscrapy.middleware import MiddlewareManager
+from dscrapy.utils.defer import mustbe_deferred
+from dscrapy.utils.conf import build_component_list
 
 class DownloaderMiddlewareManager(MiddlewareManager):
 

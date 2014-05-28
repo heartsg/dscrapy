@@ -8,7 +8,7 @@ from twisted.internet import reactor, defer, task
 from dscrapy.utils.defer import mustbe_deferred
 from dscrapy.utils.httpobj import urlparse_cached
 from dscrapy.resolver import dnscache
-from dscrapy.exceptions import ScrapyDeprecationWarning
+from dscrapy.exceptions import DScrapyDeprecationWarning
 from dscrapy import signals
 from .middleware import DownloaderMiddlewareManager
 from .handlers import DownloadHandlers
@@ -65,22 +65,25 @@ def _get_concurrency_delay(concurrency, spider, settings):
 
 class Downloader(object):
 
-    def __init__(self, crawler):
-        self.settings = crawler.settings
-        self.signals = crawler.signals
+    def __init__(self, global_settings, global_signals):
+        self.settings = global_settings
+        self.signals = global_signals
         self.slots = {}
         self.active = set()
-        self.handlers = DownloadHandlers(crawler)
+        self.handlers = DownloadHandlers(global_settings, global_signals)
         self.total_concurrency = self.settings.getint('CONCURRENT_REQUESTS')
         self.domain_concurrency = self.settings.getint('CONCURRENT_REQUESTS_PER_DOMAIN')
         self.ip_concurrency = self.settings.getint('CONCURRENT_REQUESTS_PER_IP')
-        self.middleware = DownloaderMiddlewareManager.from_crawler(crawler)
+        self.middleware = DownloaderMiddlewareManager(global_settings, global_signals)
         self._slot_gc_loop = task.LoopingCall(self._slot_gc)
         self._slot_gc_loop.start(60)
 
     def fetch(self, request, spider):
+        print "------ downlower.fetch -------"
         def _deactivate(response):
             self.active.remove(request)
+            print "----- deactivate request -----"
+            print response._get_body()	
             return response
 
         self.active.add(request)
@@ -110,6 +113,7 @@ class Downloader(object):
         return key
 
     def _enqueue_request(self, request, spider):
+        print "----- downloader.enqueue_request ------ "
         key, slot = self._get_slot(request, spider)
         request.meta['download_slot'] = key
 
@@ -148,6 +152,7 @@ class Downloader(object):
                 break
 
     def _download(self, slot, request, spider):
+        print "----downloader.download --------"
         # The order is very important for the following deferreds. Do not change!
 
         # 1. Create the download deferred
@@ -156,6 +161,7 @@ class Downloader(object):
         # 2. Notify response_downloaded listeners about the recent download
         # before querying queue for next request
         def _downloaded(response):
+            print "-----dwonloader.download.downloaded------------"
             self.signals.send_catch_log(signal=signals.response_downloaded,
                                         response=response,
                                         request=request,

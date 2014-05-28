@@ -3,8 +3,8 @@ from urllib import getproxies, unquote, proxy_bypass
 from urllib2 import _parse_proxy
 from urlparse import urlunparse
 
-from scrapy.utils.httpobj import urlparse_cached
-from scrapy.exceptions import NotConfigured
+from dscrapy.utils.httpobj import urlparse_cached
+from dscrapy.exceptions import NotConfigured
 
 
 class HttpProxyMiddleware(object):

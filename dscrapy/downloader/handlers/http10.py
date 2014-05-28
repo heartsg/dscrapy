@@ -1,7 +1,7 @@
 """Download handlers for http and https schemes
 """
 from twisted.internet import reactor
-from scrapy.utils.misc import load_object
+from dscrapy.utils.misc import load_object
 
 
 class HTTP10DownloadHandler(object):

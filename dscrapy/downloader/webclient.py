@@ -5,9 +5,9 @@ from twisted.web.client import HTTPClientFactory
 from twisted.web.http import HTTPClient
 from twisted.internet import defer
 
-from scrapy.http import Headers
-from scrapy.utils.httpobj import urlparse_cached
-from scrapy.responsetypes import responsetypes
+from dscrapy.http import Headers
+from dscrapy.utils.httpobj import urlparse_cached
+from dscrapy.responsetypes import responsetypes
 
 
 def _parsed_url_args(parsed):

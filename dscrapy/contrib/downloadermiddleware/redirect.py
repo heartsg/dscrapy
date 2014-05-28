@@ -1,9 +1,9 @@
 from urlparse import urljoin
 
-from scrapy import log
-from scrapy.http import HtmlResponse
-from scrapy.utils.response import get_meta_refresh
-from scrapy.exceptions import IgnoreRequest, NotConfigured
+from dscrapy import log
+from dscrapy.http import HtmlResponse
+from dscrapy.utils.response import get_meta_refresh
+from dscrapy.exceptions import IgnoreRequest, NotConfigured
 
 
 class BaseRedirectMiddleware(object):

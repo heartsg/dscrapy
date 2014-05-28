@@ -9,7 +9,7 @@ import warnings
 
 from twisted.python import log
 
-import scrapy
+import dscrapy
 from dscrapy.utils.python import unicode_to_str
 from dscrapy.settings import overridden_settings
 
