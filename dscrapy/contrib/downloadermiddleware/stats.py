@@ -8,10 +8,10 @@ class DownloaderStats(object):
         self.stats = stats
 
     @classmethod
-    def from_crawler(cls, crawler):
-        if not crawler.settings.getbool('DOWNLOADER_STATS'):
+    def from_settings(cls, global_settings, global_signals, global_stats):
+        if not global_settings.getbool('DOWNLOADER_STATS'):
             raise NotConfigured
-        return cls(crawler.stats)
+        return cls(global_stats)
 
     def process_request(self, request, spider):
         self.stats.inc_value('downloader/request_count', spider=spider)

@@ -15,10 +15,10 @@ class CookiesMiddleware(object):
         self.debug = debug
 
     @classmethod
-    def from_crawler(cls, crawler):
-        if not crawler.settings.getbool('COOKIES_ENABLED'):
+    def from_settings(cls, global_settings, global_signals, global_stats):
+        if not global_settings.getbool('COOKIES_ENABLED'):
             raise NotConfigured
-        return cls(crawler.settings.getbool('COOKIES_DEBUG'))
+        return cls(global_settings.getbool('COOKIES_DEBUG'))
 
     def process_request(self, request, spider):
         if 'dont_merge_cookies' in request.meta:

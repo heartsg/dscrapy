@@ -24,8 +24,8 @@ class AjaxCrawlMiddleware(object):
         self.lookup_bytes = settings.getint('AJAXCRAWL_MAXSIZE', 32768)
 
     @classmethod
-    def from_crawler(cls, crawler):
-        return cls(crawler.settings)
+    def from_settings(cls, global_settings, global_signals, global_stats):
+        return cls(global_settings)
 
     def process_response(self, request, response, spider):
 

@@ -10,9 +10,9 @@ class UserAgentMiddleware(object):
         self.user_agent = user_agent
 
     @classmethod
-    def from_crawler(cls, crawler):
-        o = cls(crawler.settings['USER_AGENT'])
-        crawler.signals.connect(o.spider_opened, signal=signals.spider_opened)
+    def from_settings(cls, global_settings, global_signals, global_stats):
+        o = cls(global_settings['USER_AGENT'])
+        global_signals.connect(o.spider_opened, signal=signals.spider_opened)
         return o
 
     def spider_opened(self, spider):

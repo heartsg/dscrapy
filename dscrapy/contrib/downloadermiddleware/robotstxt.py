@@ -15,18 +15,18 @@ from dscrapy.utils.httpobj import urlparse_cached
 class RobotsTxtMiddleware(object):
     DOWNLOAD_PRIORITY = 1000
 
-    def __init__(self, crawler):
-        if not crawler.settings.getbool('ROBOTSTXT_OBEY'):
+    def __init__(self, global_settings, crawler=None):
+        if not global_settings.getbool('ROBOTSTXT_OBEY'):
             raise NotConfigured
 
         self.crawler = crawler
-        self._useragent = crawler.settings.get('USER_AGENT')
+        self._useragent = global_settings.get('USER_AGENT')
         self._parsers = {}
         self._spider_netlocs = set()
 
     @classmethod
-    def from_crawler(cls, crawler):
-        return cls(crawler)
+    def from_settings(cls, global_settings, global_signals, global_stats):
+        return cls(global_settings)
 
     def process_request(self, request, spider):
         useragent = self._useragent

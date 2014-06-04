@@ -14,9 +14,9 @@ class HttpAuthMiddleware(object):
     (http_user and http_pass spider class attributes)"""
 
     @classmethod
-    def from_crawler(cls, crawler):
+    def from_settings(cls, global_settings, global_signals, global_stats):
         o = cls()
-        crawler.signals.connect(o.spider_opened, signal=signals.spider_opened)
+        global_signals.connect(o.spider_opened, signal=signals.spider_opened)
         return o
 
     def spider_opened(self, spider):

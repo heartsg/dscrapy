@@ -13,9 +13,9 @@ class DownloadTimeoutMiddleware(object):
         self._timeout = timeout
 
     @classmethod
-    def from_crawler(cls, crawler):
-        o = cls(crawler.settings['DOWNLOAD_TIMEOUT'])
-        crawler.signals.connect(o.spider_opened, signal=signals.spider_opened)
+    def from_settings(cls, global_settings, global_signals, global_stats):
+        o = cls(global_settings['DOWNLOAD_TIMEOUT'])
+        global_signals.connect(o.spider_opened, signal=signals.spider_opened)
         return o
 
     def spider_opened(self, spider):

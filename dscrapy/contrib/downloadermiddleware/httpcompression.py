@@ -11,8 +11,8 @@ class HttpCompressionMiddleware(object):
     sent/received from web sites"""
     
     @classmethod
-    def from_crawler(cls, crawler):
-        if not crawler.settings.getbool('COMPRESSION_ENABLED'):
+    def from_settings(cls, global_settings, global_signals, global_stats):
+        if not global_settings.getbool('COMPRESSION_ENABLED'):
             raise NotConfigured
         return cls()
     

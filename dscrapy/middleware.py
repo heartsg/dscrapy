@@ -21,16 +21,14 @@ class MiddlewareManager(object):
         raise NotImplementedError
 
     @classmethod
-    def from_settings(cls, settings, crawler=None):
+    def from_settings(cls, settings, signals=None, stats=None):
         mwlist = cls._get_mwlist_from_settings(settings)
         middlewares = []
         for clspath in mwlist:
             try:
                 mwcls = load_object(clspath)
-                if crawler and hasattr(mwcls, 'from_crawler'):
-                    mw = mwcls.from_crawler(crawler)
-                elif hasattr(mwcls, 'from_settings'):
-                    mw = mwcls.from_settings(settings)
+                if hasattr(mwcls, 'from_settings'):
+                    mw = mwcls.from_settings(settings, signals, stats)
                 else:
                     mw = mwcls()
                 middlewares.append(mw)
@@ -44,10 +42,6 @@ class MiddlewareManager(object):
         log.msg(format="Enabled %(componentname)ss: %(enabledlist)s", level=log.INFO,
                 componentname=cls.component_name, enabledlist=', '.join(enabled))
         return cls(*middlewares)
-
-    @classmethod
-    def from_crawler(cls, crawler):
-        return cls.from_settings(crawler.settings, crawler)
 
     def _add_middleware(self, mw):
         if hasattr(mw, 'open_spider'):

@@ -15,10 +15,10 @@ class HttpCacheMiddleware(object):
         self.stats = stats
 
     @classmethod
-    def from_crawler(cls, crawler):
-        o = cls(crawler.settings, crawler.stats)
-        crawler.signals.connect(o.spider_opened, signal=signals.spider_opened)
-        crawler.signals.connect(o.spider_closed, signal=signals.spider_closed)
+    def from_settings(cls, global_settings, global_signals, global_stats):
+        o = cls(global_settings, global_stats)
+        global_signals.connect(o.spider_opened, signal=signals.spider_opened)
+        global_signals.connect(o.spider_closed, signal=signals.spider_closed)
         return o
 
     def spider_opened(self, spider):
@@ -86,14 +86,14 @@ class HttpCacheMiddleware(object):
             self.stats.inc_value('httpcache/uncacheable', spider=spider)
 
 
-from scrapy.contrib.httpcache import FilesystemCacheStorage as _FilesystemCacheStorage
+from dscrapy.contrib.httpcache import FilesystemCacheStorage as _FilesystemCacheStorage
 class FilesystemCacheStorage(_FilesystemCacheStorage):
 
     def __init__(self, *args, **kwargs):
         import warnings
-        from scrapy.exceptions import ScrapyDeprecationWarning
+        from dscrapy.exceptions import DScrapyDeprecationWarning
         warnings.warn('Importing FilesystemCacheStorage from '
                       'scrapy.contrib.downloadermiddlware.httpcache is '
                       'deprecated, use scrapy.contrib.httpcache instead.',
-                      category=ScrapyDeprecationWarning, stacklevel=1)
+                      category=DScrapyDeprecationWarning, stacklevel=1)
         super(FilesystemCacheStorage, self).__init__(*args, **kwargs)
