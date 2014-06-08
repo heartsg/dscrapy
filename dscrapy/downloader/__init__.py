@@ -70,6 +70,7 @@ class Downloader(object):
         self.signals = global_signals
         self.slots = {}
         self.active = set()
+        self.queue = set()
         self.handlers = DownloadHandlers(global_settings, global_signals)
         self.total_concurrency = self.settings.getint('CONCURRENT_REQUESTS')
         self.domain_concurrency = self.settings.getint('CONCURRENT_REQUESTS_PER_DOMAIN')
@@ -77,6 +78,15 @@ class Downloader(object):
         self.middleware = DownloaderMiddlewareManager.from_settings(global_settings, global_signals, global_stats)
         self._slot_gc_loop = task.LoopingCall(self._slot_gc)
         self._slot_gc_loop.start(60)
+
+
+    def download(self, request, spider):
+        if (self.needs_backout()):
+            pass
+        else:
+            self.fetch(request, spider)
+        return
+
 
     def fetch(self, request, spider):
         def _deactivate(response):
