@@ -17,6 +17,10 @@ global_stats = load_object(global_settings['STATS_CLASS'])(global_settings)
 downloader = Downloader(global_settings, global_signals, global_stats)
 
 request = Request("http://www.baidu.com")
-downloader.fetch(request, None)
+deferred, c1, c2, c3 = downloader.download(request, None)
+
+print c1
+print c2
+print c3
 
 reactor.run()

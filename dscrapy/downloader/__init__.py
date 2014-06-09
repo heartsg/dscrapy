@@ -70,7 +70,7 @@ class Downloader(object):
         self.signals = global_signals
         self.slots = {}
         self.active = set()
-        self.queue = set()
+        self.queue = deque()
         self.handlers = DownloadHandlers(global_settings, global_signals)
         self.total_concurrency = self.settings.getint('CONCURRENT_REQUESTS')
         self.domain_concurrency = self.settings.getint('CONCURRENT_REQUESTS_PER_DOMAIN')
@@ -81,11 +81,26 @@ class Downloader(object):
 
 
     def download(self, request, spider):
+        def _deactivate(response):
+            if slot.queue:
+                next_request, next_spider, next_dfd = reqself.queue.popleft()
+                dfd = self.fetch(next_request, next_spider)
+                dfd.chainDeferred(next_dfd)
+                return response 
+
         if (self.needs_backout()):
-            pass
+            dfd = defer.Deferred().addBoth(_deactivate)
+            self.queue.append((request, spider, dfd))
         else:
-            self.fetch(request, spider)
-        return
+            dfd = self.fetch(request, spider)
+            dfd.addBoth(_deactivate)
+
+        total_active_count = len(self.active)
+        total_queue_count = len(self.queue)
+        key, slot = self._get_slot(request, spider)
+        slot_active_count = len(slot.active)
+            
+        return (dfd, total_active_count, slot_active_count, total_queue_count)
 
 
     def fetch(self, request, spider):
