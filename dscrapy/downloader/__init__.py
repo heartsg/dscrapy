@@ -82,13 +82,25 @@ class Downloader(object):
 
     def download(self, request, spider):
         def _deactivate(response):
-            if slot.queue:
-                next_request, next_spider, next_dfd = reqself.queue.popleft()
-                dfd = self.fetch(next_request, next_spider)
-                dfd.chainDeferred(next_dfd)
-                return response 
+            temp_queue = deque()
+            while self.queue:
+                next_request, next_spider, next_dfd = self.queue.popleft()
+                next_key, next_slot = self._get_slot(next_request, next_spider)
+                if (next_slot.free_transfer_slots() > 0):
+                    dfd = self.fetch(next_request, next_spider)
+                    dfd.chainDeferred(next_dfd)
+                    break
+                else:
+                    temp_queue.appendleft((next_request, next_spider, next_dfd))
 
-        if (self.needs_backout()):
+            self.queue.extendleft(temp_queue)
+                
+            return response 
+
+        key, slot = self._get_slot(request, spider)
+        request.meta['download_slot'] = key
+
+        if (self.needs_backout() or slot.free_transfer_slots() <= 0):
             dfd = defer.Deferred().addBoth(_deactivate)
             self.queue.append((request, spider, dfd))
         else:
@@ -97,7 +109,6 @@ class Downloader(object):
 
         total_active_count = len(self.active)
         total_queue_count = len(self.queue)
-        key, slot = self._get_slot(request, spider)
         slot_active_count = len(slot.active)
             
         return (dfd, total_active_count, slot_active_count, total_queue_count)
