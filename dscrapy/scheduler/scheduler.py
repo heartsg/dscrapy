@@ -7,10 +7,12 @@ from scrapy.utils.reqser import request_to_dict, request_from_dict
 from scrapy.utils.misc import load_object
 from scrapy.utils.job import job_dir
 from scrapy import log
+from dscrapy.utils.httpobj import urlparse_cached
+
 
 class Slot(object):
 
-    def __init__(self, request, spider, dupefilter, jobdir=None, dqclass=None, mqclass=None, logunser=False,  stats=None):
+    def __init__(self, request, dupefilter, jobdir=None, dqclass=None, mqclass=None, logunser=False,  stats=None):
         self.df = dupefilter
         self.dqdir = self._dqdir(jobdir, request.key)
         self.dqclass = dqclass
@@ -99,7 +101,7 @@ class Scheduler(object):
 
     def __init__(self, dupefilter, jobdir=None, dqclass=None, mqclass=None, logunser=False, stats=None):
         self.df = dupefilter
-        self.dqdir = self._dqdir(jobdir)
+        self.jobdir = jobdir
         self.dqclass = dqclass
         self.mqclass = mqclass
         self.logunser = logunser
@@ -116,6 +118,22 @@ class Scheduler(object):
         logunser = settings.getbool('LOG_UNSERIALIZABLE_REQUESTS')
         return cls(dupefilter, job_dir(settings), dqclass, mqclass, logunser, crawler.stats)
 
-    def enque_request(self, request, spider):
+    def enque_request(self, request):
 
-    def next_request(self, request, spider):
+    def next_request(self):
+
+
+    def _get_slot(self, request):
+        key = self._get_slot_key(request, spider)
+        if key not in self.slots:
+            self.slots[key] = Slot(request, self.df, self.jobdir, self.dqclass, self.mqclass, self.logunser, self.stats)
+
+        return key, self.slots[key]
+
+    def _get_slot_key(self, request, spider):
+        if 'key' in request.meta:
+            return request.meta['key']
+
+        key = urlparse_cached(request).hostname or ''
+
+        return key
