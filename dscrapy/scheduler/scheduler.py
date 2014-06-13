@@ -119,6 +119,8 @@ class Scheduler(object):
         return cls(dupefilter, job_dir(settings), dqclass, mqclass, logunser, crawler.stats)
 
     def enque_request(self, request):
+        slot = self._get_slot(request)
+        slot.enque_request(request)
 
     def next_request(self):
 
