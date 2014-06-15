@@ -149,6 +149,12 @@ class Scheduler(object):
         key, slot = self._get_slot(request)
         return slot.enque_request(request)
 
+    def update_downloader_status(self, request, total_active_count, slot_active_count, total_queue_count):
+        key, slot = self._get_slot(request)
+        self.downloader_total_active_count = total_active_count
+        self.downloader_total_queue_count = total_queue_count
+        slot.downloader_slot_active_count = slot_active_count
+
     def _get_slot(self, request):
         key = self._get_slot_key(request, spider)
         if key not in self.slots:
