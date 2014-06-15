@@ -12,15 +12,18 @@ from dscrapy.utils.httpobj import urlparse_cached
 
 class Slot(object):
 
-    def __init__(self, request, dupefilter, jobdir=None, dqclass=None, mqclass=None, logunser=False,  stats=None):
-        self.df = dupefilter
-        self.dqdir = self._dqdir(jobdir, request.key)
-        self.dqclass = dqclass
-        self.mqclass = mqclass
-        self.logunser = logunser
-        self.stats = stats
-        self.request = request
-        self.spider = spider
+    def __init__(self, key, scheduler):
+        self.scheduler = scheduler
+        self.df = scheduler.dupefilter
+        self.dqdir = self._dqdir(scheduler.jobdir, key)
+        self.dqclass = scheduler.dqclass
+        self.mqclass = scheduler.mqclass
+        self.logunser = scheduler.logunser
+        self.stats = scheduler.stats
+        self.total_concurrency = scheduler.total_concurrency
+        self.domain_concurrency = scheduler.domain_concurrency
+        self.ip_concurrency = scheduler.ip_concurrency
+        self.spider = None
         self.mqs = PriorityQueue(self._newmq)
         self.dqs = self._dq() if self.dqdir else None
         return self.df.open()
@@ -47,6 +50,8 @@ class Slot(object):
             self.stats.inc_value('scheduler/enqueued/memory', spider=self.spider)
         self.stats.inc_value('scheduler/enqueued', spider=self.spider)
 
+        return len(self)
+
     def next_request(self):
         request = self.mqs.pop()
         if request:
@@ -62,8 +67,23 @@ class Slot(object):
     def __len__(self):
         return len(self.dqs) + len(self.mqs) if self.dqs else len(self.mqs)
 
+    def _dqpush(self, request):
+        if self.dqs is None:
+            return
+        try:
+            reqd = request_to_dict(request, self.spider)
+            self.dqs.push(reqd, -request.meta['priority'])
+        except ValueError as e: # non serializable request
+            if self.logunser:
+                log.msg(format="Unable to serialize request: %(request)s - reason: %(reason)s",
+                        level=log.ERROR, spider=self.spider,
+                        request=request, reason=e)
+            return
+        else:
+            return True
+
     def _mqpush(self, request):
-        self.mqs.push(request, -request.priority)
+        self.mqs.push(request, -request.meta['priority'])
 
     def _dqpop(self):
         if self.dqs:
@@ -81,7 +101,7 @@ class Slot(object):
         activef = join(self.dqdir, 'active.json')
         if exists(activef):
             with open(activef) as f:
-                prios = json.load(f)
+                priiios = json.load(f)
         else:
             prios = ()
         q = PriorityQueue(self._newdq, startprios=prios)
@@ -99,7 +119,7 @@ class Slot(object):
 
 class Scheduler(object):
 
-    def __init__(self, dupefilter, jobdir=None, dqclass=None, mqclass=None, logunser=False, stats=None):
+    def __init__(self, dupefilter, jobdir=None, dqclass=None, mqclass=None, logunser=False, stats=None, total_concurrency=0, domain_concurrency=0, ip_concurrency=0):
         self.df = dupefilter
         self.jobdir = jobdir
         self.dqclass = dqclass
@@ -107,28 +127,32 @@ class Scheduler(object):
         self.logunser = logunser
         self.stats = stats
         self.slots = {}
+        self.total_concurrency = total_concurrency
+        self.domain_concurrency = domain_concurrency
+        self.ip_concurrency = ip_concurrency
 
     @classmethod
-    def from_settings(cls, global_settings):
+    def from_settings(cls, global_settings, global_stats):
         settings = global_settings
         dupefilter_cls = load_object(settings['DUPEFILTER_CLASS'])
         dupefilter = dupefilter_cls.from_settings(settings)
         dqclass = load_object(settings['SCHEDULER_DISK_QUEUE'])
         mqclass = load_object(settings['SCHEDULER_MEMORY_QUEUE'])
         logunser = settings.getbool('LOG_UNSERIALIZABLE_REQUESTS')
-        return cls(dupefilter, job_dir(settings), dqclass, mqclass, logunser, crawler.stats)
+        total_concurrency = self.settings.getint('CONCURRENT_REQUESTS')
+        domain_concurrency = self.settings.getint('CONCURRENT_REQUESTS_PER_DOMAIN')
+        ip_concurrency = self.settings.getint('CONCURRENT_REQUESTS_PER_IP')
+
+        return cls(dupefilter, job_dir(settings), dqclass, mqclass, logunser, global_stats, total_concurrency, domain_concurrency, ip_concurrency)
 
     def enque_request(self, request):
-        slot = self._get_slot(request)
-        slot.enque_request(request)
-
-    def next_request(self):
-
+        key, slot = self._get_slot(request)
+        return slot.enque_request(request)
 
     def _get_slot(self, request):
         key = self._get_slot_key(request, spider)
         if key not in self.slots:
-            self.slots[key] = Slot(request, self.df, self.jobdir, self.dqclass, self.mqclass, self.logunser, self.stats)
+            self.slots[key] = Slot(key, self)
 
         return key, self.slots[key]
 
